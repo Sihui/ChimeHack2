@@ -17,16 +17,6 @@ public class RescueController {
 	private RescueStatus rescueStatus = new RescueStatus();
 	private long id = 0;
 	
-//	@RequestMapping("/registerRescue")
-//	public ResponseEntity<Map<Long, Boolean>> registerRescue(@RequestParam(value="rescueId", defaultValue = "") long rescueId) {
-//		boolean result = rescueStatus.registerRescue(rescueId);
-//		if (!result) {
-//			return new ResponseEntity<Map<Long,Boolean>>(HttpStatus.INTERNAL_SERVER_ERROR);
-//		} else {
-//			return new ResponseEntity<Map<Long, Boolean>>(rescueStatus.getStatus(), HttpStatus.OK);			
-//		}
-//	}
-	
 	@RequestMapping("/yes")
 	public ResponseEntity<Map<Long, Boolean>> rescue(@RequestParam(value = "rescueId", defaultValue = "") long rescueId) {
 		boolean result = rescueStatus.rescue(rescueId);
