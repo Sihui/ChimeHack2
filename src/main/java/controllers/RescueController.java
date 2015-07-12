@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RescueController {
 	private String rootUrl = "https://88d800c0.ngrok.io";
+	private String chatLink = "https://plus.google.com/hangouts/_/gwyoi6embwxabzvcibxauszbaea";
 	private RescueStatus rescueStatus = new RescueStatus();
 	private long id = 0;
 	
@@ -31,12 +32,14 @@ public class RescueController {
 	public void deny() {} // No-op
 	
 	@RequestMapping("/isRescued")
-	public ResponseEntity<Boolean> isRescued(@RequestParam(value = "rescueId", defaultValue = "") long rescueId) {
+	public ResponseEntity<Map<String, String>> isRescued(@RequestParam(value = "rescueId", defaultValue = "") long rescueId) {
 		Boolean result = rescueStatus.isRescued(rescueId);
+		Map<String, String> returnVal = new HashMap<>();
+		returnVal.put("pickedUp", result + "");
 		if (result == null) {
-			return new ResponseEntity<Boolean>(HttpStatus.INTERNAL_SERVER_ERROR); 
+			return new ResponseEntity<Map<String, String>>(HttpStatus.INTERNAL_SERVER_ERROR); 
 		} else {
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);	
+			return new ResponseEntity<Map<String, String>>(returnVal, HttpStatus.OK);	
 		}
 	}
 	
@@ -46,8 +49,9 @@ public class RescueController {
 		long thisId = id++;
 		rescueStatus.registerRescue(thisId);
 		message.put("id", "" + thisId);
-		message.put("yesLink", rootUrl + "/yes?rescueId=" + thisId);
-		message.put("DenyUrl", rootUrl + "/no");
+		message.put("confirmLink", rootUrl + "/yes?rescueId=" + thisId);
+		message.put("denyLink", rootUrl + "/no");
+		message.put("chatLink", chatLink);
 		return new ResponseEntity<Map<String, String>>(message, HttpStatus.OK);
 	}
 	
