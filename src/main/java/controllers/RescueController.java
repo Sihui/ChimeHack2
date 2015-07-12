@@ -1,5 +1,10 @@
 package controllers;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RescueController {
-	private String rootUrl = "https://88d800c0.ngrok.io";
+	private String rootUrl = "https://bc3a58a9.ngrok.io";
 	private String chatLink = "https://plus.google.com/hangouts/_/gwyoi6embwxabzvcibxauszbaea";
 	private RescueStatus rescueStatus = new RescueStatus();
 	private long id = 0;
@@ -59,5 +64,24 @@ public class RescueController {
 	public ResponseEntity<Map<Long,Boolean>> clear() {
 		rescueStatus.clear();
 		return new ResponseEntity<Map<Long,Boolean>>(HttpStatus.OK);
+	}
+	
+	@RequestMapping("/generateNewHangout")
+	public ResponseEntity<String> generateNewHangoutUrl() {
+		try {
+			URL url = new URL("https://plus.google.com/hangouts/_/");
+			URLConnection urlConnection = url.openConnection();
+			HttpURLConnection httpUrlConnection = (HttpURLConnection)urlConnection;
+//			httpUrlConnection.setInstanceFollowRedirects(false);
+			int responseCode = httpUrlConnection.getResponseCode();
+//			if (302 != httpUrlConnection.getResponseCode()) {
+//				throw new Exception("Response code is " + responseCode);
+//			}
+			String location = urlConnection.getHeaderField("Location");
+			return new ResponseEntity<String>(location, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("fail", HttpStatus.OK);
+		}
 	}
 }
